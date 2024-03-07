@@ -33,8 +33,15 @@ function shallowCopy(obj) {
  *    mergeObjects([{a: 1, b: 2}, {b: 3, c: 5}]) => {a: 1, b: 5, c: 5}
  *    mergeObjects([]) => {}
  */
-function mergeObjects(/* objects */) {
-  throw new Error('Not implemented');
+function mergeObjects(objects) {
+  const merged = {};
+  objects.forEach((obj) => {
+    Object.entries(obj).forEach(([key, value]) => {
+      merged[key] = (merged[key] || 0) + value;
+    });
+  });
+
+  return merged;
 }
 
 /**
@@ -51,9 +58,14 @@ function mergeObjects(/* objects */) {
  *
  */
 function removeProperties(obj, keys) {
-  const newObj = obj;
-  delete newObj[keys];
-  return newObj;
+  const newObject = {};
+  Object.assign(newObject, obj);
+  keys.forEach((key) => {
+    if (Object.hasOwn(newObject, key)) {
+      delete newObject[key];
+    }
+  });
+  return newObject;
 }
 
 /**
@@ -138,8 +150,31 @@ function makeWord(/* lettersObject */) {
  *    sellTickets([25, 25, 50]) => true
  *    sellTickets([25, 100]) => false (The seller does not have enough money to give change.)
  */
-function sellTickets(/* queue */) {
-  throw new Error('Not implemented');
+function sellTickets(queue) {
+  let twentyFive = 0;
+  let fifty = 0;
+
+  for (let i = 0; i < queue.length; i += 1) {
+    if (queue[i] === 25) {
+      twentyFive += 1;
+    } else if (queue[i] === 50) {
+      if (twentyFive > 0) {
+        twentyFive -= 1;
+        fifty += 1;
+      } else {
+        return false;
+      }
+    } else if (fifty > 0 && twentyFive > 0) {
+      fifty -= 1;
+      twentyFive -= 1;
+    } else if (twentyFive >= 3) {
+      twentyFive -= 3;
+    } else {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 /**
